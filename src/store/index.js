@@ -11,6 +11,7 @@ export const store = new Vuex.Store({
       count:7,
       msgs:[]
     },
+    getters:{},
     mutations:{
         Login:(state,data) => {
             localStorage.setItem('token',data)
@@ -22,8 +23,8 @@ export const store = new Vuex.Store({
             state.token = null
         },
         User_id:(state,data) => {
-            localStorage.setItem('user_id',data)
-            state.user_id = data
+            localStorage.setItem('userId',data)
+            state.userId = data
         }
     },
   })

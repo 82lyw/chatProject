@@ -41,9 +41,9 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 io.on('connection', (socket) => {
 
 
-  // 群聊
+  // 聊天
   socket.on('sendMsg', function (data) {
-    socket.broadcast.emit('receiveGroupMsg', data);
+    socket.broadcast.emit('receiveMsg', data);
   });
 
   // 上线

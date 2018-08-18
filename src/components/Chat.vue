@@ -36,7 +36,10 @@
                                     <img :src="item.headPortrait" alt="">
                                 </div>
                             </div>
-                        <div class="msg-content">{{item.content}}</div>
+                        <div class="msg-content" 
+                        @touchstart='touchStart' 
+                        @touchmove='touchMove' 
+                        @touchend='touchEnd'>{{item.content}}</div>
                     </div>
                 </div>
             </div>
@@ -81,6 +84,7 @@ export default {
             inputContent:'',
             oContent: {},
             oInput:{},
+            timeOutEvent:0
         }
     },
     methods: {
@@ -103,6 +107,44 @@ export default {
                 setTimeout(() => this.oContent.scrollTop = this.oContent.scrollHeight, 0);
             };
         },
+
+        //长按触发举报 @touchstart='touchStart' @touchmove='touchMove' @touchend='touchEnd'
+        //开始按
+        touchStart:function() {
+            this.timeOutEvent = setTimeout("longPress()",500);
+            return false;
+        },
+        //释放，若500毫秒内释放，则取消长按事件
+        touchEnd:function() {
+            clearTimeout(this.timeOutEvent);
+            if(this.timeOutEvent != 0) {
+
+            }
+            return false;
+        },
+        //若手指移动
+        touchMove:function() {
+            clearTimeout(this.timeOutEvent);
+            timeOutEvent = 0;
+        },
+        //长按执行的事件
+        longPress:function() {
+            timeOutEvent = 0;
+            if(comfirm("确定举报该条聊天信息？")) {
+                axios.post("/api/report",this.userId)
+                .then((response) => {
+                    console.log(response.data);
+                    if(response.data.success) {
+                        Toast("举报成功");
+                    }
+                    }).catch((err) => {
+                        this.errors = err.response.data
+                        console.log(this.errors)
+                        })  
+            } else {
+                return false;
+            }
+        }
     },
     computed: {
         rules:function() {
@@ -121,6 +163,7 @@ export default {
         index = Math.floor((Math.random()*Ques.length));
         this.question = Ques[index]
         }
+        
     },
 
     watch: {
